@@ -2,15 +2,14 @@ package com.jjkmod.sukuna;
 
 import com.jjkmod.JJKPlayerData;
 import com.jjkmod.JJKProfile;
+import com.jjkmod.combat.CombatResolver;
+import com.jjkmod.combat.CooldownManager;
+import com.jjkmod.combat.DamageInstance;
+import com.jjkmod.combat.HitboxSystem;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import java.util.List;
 
@@ -22,41 +21,23 @@ public class DismantleSlash {
             return;
         }
 
+        if (CooldownManager.isOnCooldown(player.getUuid(), "sukuna_dismantle")) {
+            int remaining = CooldownManager.getRemainingCooldown(player.getUuid(), "sukuna_dismantle");
+            player.sendMessage(Text.literal("\u00a7cAbility on cooldown: " + remaining + "s"), false);
+            return;
+        }
+
         JJKPlayerData.consumeCursedEnergy(player, 25);
+        CooldownManager.startCooldown(player.getUuid(), "sukuna_dismantle");
+
         ServerWorld world = player.getServerWorld();
-        Vec3d lookDirection = player.getRotationVector();
-        Vec3d startPos = player.getEyePos();
+        List<LivingEntity> targets = HitboxSystem.getEntitiesInCone(player, 20, 45);
 
         player.sendMessage(Text.literal("\u00a74Dismantle!"), false);
+        DamageInstance damage = DamageInstance.slashInstance(6.0f, 1.5f);
 
-        // Slash cone in front
-        for (double distance = 0; distance < 20; distance += 1.0) {
-            Vec3d scanPos = startPos.add(lookDirection.multiply(distance));
-            Box scanBox = Box.of(scanPos, 4, 4, 4);
-
-            List<LivingEntity> targets = world.getEntitiesByClass(
-                    LivingEntity.class,
-                    scanBox,
-                    entity -> entity != player && entity.isAlive()
-            );
-
-            for (LivingEntity target : targets) {
-                target.damage(world.getDamageSources().magic(), 6.0F);
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 60, 1, false, false));
-                Vec3d knockback = lookDirection.multiply(1.5);
-                target.addVelocity(knockback.x, knockback.y * 0.3, knockback.z);
-            }
-
-            // Red slash particles
-            world.spawnParticles(
-                    ParticleTypes.FLAME,
-                    scanPos.x,
-                    scanPos.y,
-                    scanPos.z,
-                    3,
-                    0.3, 0.3, 0.3,
-                    0.05
-            );
+        for (LivingEntity target : targets) {
+            CombatResolver.applyDamageAndEffects(player, target, damage, false);
         }
     }
 }
