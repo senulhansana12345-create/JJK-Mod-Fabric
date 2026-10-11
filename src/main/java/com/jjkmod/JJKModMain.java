@@ -1,9 +1,10 @@
 package com.jjkmod;
 
 import com.jjkmod.command.JJKCommand;
-import com.jjkmod.technique.JJKRegistries;
+import com.jjkmod.event.PlayerTickEvent;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +16,10 @@ public class JJKModMain implements ModInitializer {
     public void onInitialize() {
         JJKRegistries.registerDefaults();
         JJKCommand.register();
+
+        ServerTickEvents.END_SERVER_TICK.register(server -> {
+            server.getPlayerManager().getPlayerList().forEach(PlayerTickEvent::onServerTick);
+        });
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             LOGGER.info("JJK Premium Mod is running on Fabric 1.21.1");

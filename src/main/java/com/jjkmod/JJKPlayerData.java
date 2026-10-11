@@ -13,7 +13,7 @@ public final class JJKPlayerData {
     public static JJKProfile get(ServerPlayerEntity player) {
         NbtCompound root = player.getPersistentData();
         if (!root.contains(TAG, NbtElement.COMPOUND_TYPE)) {
-            root.put(TAG, new JbtCompound());
+            root.put(TAG, new NbtCompound());
         }
         return JJKProfile.fromNbt(root.getCompound(TAG));
     }
@@ -25,7 +25,7 @@ public final class JJKPlayerData {
     public static void initialize(ServerPlayerEntity player) {
         NbtCompound root = player.getPersistentData();
         if (!root.contains(TAG, NbtElement.COMPOUND_TYPE)) {
-            root.put(TAG, new JbtCompound());
+            root.put(TAG, new NbtCompound());
             save(player, new JJKProfile());
         }
     }
@@ -44,13 +44,31 @@ public final class JJKPlayerData {
 
     public static void setLevel(ServerPlayerEntity player, int level) {
         JJKProfile profile = get(player);
-        profile.setLevel(level);
+        profile.setLevel(Math.max(1, Math.min(level, 100)));
+        save(player, profile);
+    }
+
+    public static void addCursedEnergy(ServerPlayerEntity player, int amount) {
+        JJKProfile profile = get(player);
+        profile.setCursedEnergy(Math.min(profile.getCursedEnergy() + amount, profile.getMaxCursedEnergy()));
+        save(player, profile);
+    }
+
+    public static void consumeCursedEnergy(ServerPlayerEntity player, int amount) {
+        JJKProfile profile = get(player);
+        profile.setCursedEnergy(Math.max(0, profile.getCursedEnergy() - amount));
         save(player, profile);
     }
 
     public static void unlockDomain(ServerPlayerEntity player) {
         JJKProfile profile = get(player);
         profile.setDomainUnlocked(true);
+        save(player, profile);
+    }
+
+    public static void setDomainActive(ServerPlayerEntity player, boolean active) {
+        JJKProfile profile = get(player);
+        profile.setDomainActive(active);
         save(player, profile);
     }
 }

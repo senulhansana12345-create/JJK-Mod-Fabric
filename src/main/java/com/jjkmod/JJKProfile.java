@@ -1,8 +1,6 @@
 package com.jjkmod;
 
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.server.network.ServerPlayerEntity;
 
 public final class JJKProfile {
     private String sorcererId = "gojo";
@@ -14,7 +12,10 @@ public final class JJKProfile {
     private int speed = 10;
     private int control = 10;
     private boolean domainUnlocked = false;
-    private boolean sixEyesUnlocked = true;
+    private boolean sixEyesUnlocked = false;
+    private boolean domainActive = false;
+    private long domainActivationTime = 0;
+    private int experience = 0;
 
     public static JJKProfile fromNbt(NbtCompound tag) {
         JJKProfile profile = new JJKProfile();
@@ -28,6 +29,9 @@ public final class JJKProfile {
         profile.setControl(tag.contains("control") ? tag.getInt("control") : 10);
         profile.setDomainUnlocked(tag.contains("domainUnlocked") && tag.getBoolean("domainUnlocked"));
         profile.setSixEyesUnlocked(tag.contains("sixEyesUnlocked") && tag.getBoolean("sixEyesUnlocked"));
+        profile.setDomainActive(tag.contains("domainActive") && tag.getBoolean("domainActive"));
+        profile.setDomainActivationTime(tag.contains("domainActivationTime") ? tag.getLong("domainActivationTime") : 0);
+        profile.setExperience(tag.contains("experience") ? tag.getInt("experience") : 0);
         return profile;
     }
 
@@ -43,11 +47,10 @@ public final class JJKProfile {
         tag.putInt("control", control);
         tag.putBoolean("domainUnlocked", domainUnlocked);
         tag.putBoolean("sixEyesUnlocked", sixEyesUnlocked);
+        tag.putBoolean("domainActive", domainActive);
+        tag.putLong("domainActivationTime", domainActivationTime);
+        tag.putInt("experience", experience);
         return tag;
-    }
-
-    public static void initialize(ServerPlayerEntity player) {
-        JJKPlayerData.initialize(player);
     }
 
     public String getSorcererId() { return sorcererId; }
@@ -79,4 +82,14 @@ public final class JJKProfile {
 
     public boolean isSixEyesUnlocked() { return sixEyesUnlocked; }
     public void setSixEyesUnlocked(boolean sixEyesUnlocked) { this.sixEyesUnlocked = sixEyesUnlocked; }
+
+    public boolean isDomainActive() { return domainActive; }
+    public void setDomainActive(boolean domainActive) { this.domainActive = domainActive; }
+
+    public long getDomainActivationTime() { return domainActivationTime; }
+    public void setDomainActivationTime(long domainActivationTime) { this.domainActivationTime = domainActivationTime; }
+
+    public int getExperience() { return experience; }
+    public void setExperience(int experience) { this.experience = experience; }
+    public void addExperience(int amount) { this.experience += amount; }
 }
