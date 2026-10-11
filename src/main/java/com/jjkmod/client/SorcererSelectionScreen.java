@@ -1,9 +1,9 @@
 package com.jjkmod.client;
 
-import com.jjkmod.JJKPlayerData;
-import com.jjkmod.JJKProfile;
 import com.jjkmod.JJKRegistries;
 import com.jjkmod.technique.SorcererDefinition;
+import com.jjkmod.technique.TechniqueDefinition;
+import com.jjkmod.technique.TechniqueRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -26,13 +26,8 @@ public class SorcererSelectionScreen extends Screen {
             addDrawableChild(ButtonWidget.builder(
                     Text.literal(sorcerer.name()),
                     button -> {
-                        MinecraftClient client = MinecraftClient.getInstance();
-                        if (client.player != null) {
-                            JJKPlayerData.setSorcerer(client.player, sorcerer.id());
-                            JJKPlayerData.setTechnique(client.player, sorcerer.techniqueIds().getFirst());
-                            client.player.sendMessage(Text.literal("Selected: " + sorcerer.name()), false);
-                        }
-                        client.setScreen(new PlayerDetailScreen(sorcerer.id()));
+                        ClientSelectionManager.setSelectedSorcererId(sorcerer.id());
+                        MinecraftClient.getInstance().setScreen(new PlayerDetailScreen(sorcerer.id()));
                     }
             ).dimensions(80, y, 220, 22).build());
             y += 30;

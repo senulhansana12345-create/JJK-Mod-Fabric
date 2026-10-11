@@ -1,7 +1,6 @@
 package com.jjkmod;
 
 import com.jjkmod.technique.SorcererDefinition;
-import com.jjkmod.technique.TechniqueDefinition;
 import com.jjkmod.technique.TechniqueRegistry;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -23,11 +22,11 @@ public final class JJKRegistries {
                 "Satoru Gojo",
                 "The Honored One",
                 "Infinity Domain",
-                "A prodigy with unparalleled control and philosophical intent.",
-                List.of("limitless", "hollow_purple", "six_eyes"),
+                "One of the strongest sorcerers in the world, with Six Eyes, Limitless, and the ability to reshape space itself.",
+                List.of("limitless", "infinity", "six_eyes", "blue", "red", "hollow_purple"),
                 100,
-                12,
-                13
+                20,
+                18
         ));
 
         registerSorcerer(new SorcererDefinition(
@@ -35,11 +34,11 @@ public final class JJKRegistries {
                 "Ryomen Sukuna",
                 "King of Curses",
                 "Malevolent Shrine",
-                "A legendary curse with devastating destructive force and a shrine domain.",
-                List.of("dismantle", "cleave", "malevolent_shrine"),
+                "The most feared curse with devastating slashes, shrine-based pressure, and overwhelming authority over cursed energy.",
+                List.of("dismantle", "cleave", "malevolent_shrine", "open_transfiguration"),
                 120,
-                15,
-                14
+                25,
+                15
         ));
 
         registerSorcerer(new SorcererDefinition(
@@ -47,11 +46,11 @@ public final class JJKRegistries {
                 "Yuji Itadori",
                 "The Vessel",
                 "Black Flash Domain",
-                "A brave vessel with courage, instincts, and explosive growth.",
-                List.of("black_flash", "divine_dogs", "soul_shattering"),
+                "A fearless vessel with raw power, instinctive momentum, and explosive impact techniques.",
+                List.of("black_flash", "soul_shattering", "convergence", "divine_dogs"),
                 90,
-                10,
-                11
+                16,
+                14
         ));
 
         registerSorcerer(new SorcererDefinition(
@@ -59,11 +58,23 @@ public final class JJKRegistries {
                 "Megumi Fushiguro",
                 "Ten Shadows User",
                 "Divine Dogs Domain",
-                "A strategic shikigami specialist with balanced offense and defense.",
-                List.of("ten_shadows", "divine_dogs", "max elephant"),
+                "A disciplined and tactical shikigami user who controls the battlefield through geometry, summons, and pressure.",
+                List.of("ten_shadows", "divine_dogs_megumi", "nue", "max elephant"),
                 95,
-                11,
-                12
+                18,
+                17
+        ));
+
+        registerSorcerer(new SorcererDefinition(
+                "geto",
+                "Suguru Geto",
+                "Cursed Womb: Death Painting",
+                "Cursed Womb Domain",
+                "A cursed manipulator whose domain and cursed techniques create fear, control, and horror on the battlefield.",
+                List.of("dismantle", "malevolent_shrine", "open_transfiguration"),
+                110,
+                18,
+                16
         ));
     }
 
