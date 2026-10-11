@@ -3,15 +3,23 @@ package com.jjkmod.event;
 import com.jjkmod.JJKPlayerData;
 import com.jjkmod.JJKProfile;
 import com.jjkmod.gojo.GojoAbilityManager;
+import com.jjkmod.sukuna.SukunaAbilityManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 public class PlayerTickEvent {
     public static void onServerTick(ServerPlayerEntity player) {
         JJKProfile profile = JJKPlayerData.get(player);
 
-        // Regenerate cursed energy over time
+        // Regenerate cursed energy over time based on sorcerer
         if (profile.getCursedEnergy() < profile.getMaxCursedEnergy()) {
-            int regenRate = profile.isSixEyesUnlocked() ? 3 : 1; // Six Eyes enhances regen
+            int regenRate = profile.isSixEyesUnlocked() ? 3 : 1;
+            if (profile.getSorcererId().equals("sukuna")) {
+                regenRate = 2; // Sukuna has decent regen
+            } else if (profile.getSorcererId().equals("yuji")) {
+                regenRate = 1;
+            } else if (profile.getSorcererId().equals("megumi")) {
+                regenRate = 1;
+            }
             profile.setCursedEnergy(Math.min(profile.getCursedEnergy() + regenRate, profile.getMaxCursedEnergy()));
             JJKPlayerData.save(player, profile);
         }
@@ -28,9 +36,11 @@ public class PlayerTickEvent {
             JJKPlayerData.save(player, profile);
         }
 
-        // Gojo-specific ability ticking
+        // Sorcerer-specific ability ticking
         if (profile.getSorcererId().equals("gojo")) {
             GojoAbilityManager.tickGojo(player);
+        } else if (profile.getSorcererId().equals("sukuna")) {
+            SukunaAbilityManager.tickSukuna(player);
         }
     }
 }

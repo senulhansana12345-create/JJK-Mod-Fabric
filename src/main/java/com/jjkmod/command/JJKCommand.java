@@ -7,6 +7,7 @@ import com.jjkmod.domain.DomainManager;
 import com.jjkmod.gojo.GojoAbilityManager;
 import com.jjkmod.gojo.LimitlessSystem;
 import com.jjkmod.gojo.SixEyesSystem;
+import com.jjkmod.sukuna.SukunaAbilityManager;
 import com.jjkmod.technique.SorcererDefinition;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -49,6 +50,7 @@ public final class JJKCommand {
                                     return 0;
                                 }
                                 JJKPlayerData.setSorcerer(player, id);
+                                JJKPlayerData.setTechnique(player, sorcerer.techniqueIds().get(0));
                                 context.getSource().sendFeedback(() -> Text.literal("\u00a76Selected " + sorcerer.name()), false);
                                 return 1;
                             })));
@@ -111,7 +113,19 @@ public final class JJKCommand {
                         JJKProfile profile = JJKPlayerData.get(player);
                         profile.setSixEyesUnlocked(true);
                         JJKPlayerData.save(player, profile);
-                        context.getSource().sendFeedback(() -> Text.literal("\u00a76Domain and Six Eyes unlocked!"), false);
+                        context.getSource().sendFeedback(() -> Text.literal("\u00a76Domain and abilities unlocked!"), false);
+                        return 1;
+                    }));
+
+            // /jjk list - show all sorcerers
+            root.then(CommandManager.literal("list")
+                    .executes(context -> {
+                        context.getSource().sendFeedback(() -> Text.literal("\u00a76Available Sorcerers:"), false);
+                        for (SorcererDefinition sorcerer : JJKRegistries.getAllSorcerers()) {
+                            context.getSource().sendFeedback(() -> Text.literal(
+                                    "\u00a7e" + sorcerer.id() + " - " + sorcerer.name() + " (" + sorcerer.title() + ")"
+                            ), false);
+                        }
                         return 1;
                     }));
 
@@ -175,6 +189,23 @@ public final class JJKCommand {
                                     return 0;
                                 }
                                 limitless.activateHollowPurple();
+                                return 1;
+                            })));
+
+            // Sukuna-specific commands
+            root.then(CommandManager.literal("sukuna")
+                    .then(CommandManager.literal("dismantle")
+                            .executes(context -> {
+                                ServerPlayerEntity player = context.getSource().getPlayer();
+                                if (player == null) return 0;
+                                SukunaAbilityManager.executeDismantleSlash(player);
+                                return 1;
+                            }))
+                    .then(CommandManager.literal("cleave")
+                            .executes(context -> {
+                                ServerPlayerEntity player = context.getSource().getPlayer();
+                                if (player == null) return 0;
+                                SukunaAbilityManager.executeCleaveTechnique(player);
                                 return 1;
                             })));
 
