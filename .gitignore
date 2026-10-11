@@ -1,0 +1,15 @@
+# gradle files
+autosave
+.idea/
+.vscode/
+.gradle/
+build/
+**/build/
+/bin/
+
+# Minecraft generated files
+run/
+
+# OS files
+.DS_Store
+Thumbs.db

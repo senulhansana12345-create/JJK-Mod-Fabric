@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "jjkmod",
+  "version": "${version}",
+  "name": "JJK Premium Mod",
+  "description": "A Jujutsu Kaisen-inspired mod for Fabric 1.21.1 with premium sorcerers, techniques, domains, GUI, player progression, and PvP support.",
+  "authors": [
+    "JJK Mod Dev"
+  ],
+  "contact": {
+    "homepage": "https://github.com/senulhansana12345-create/JJK-Mod-Fabric",
+    "sources": "https://github.com/senulhansana12345-create/JJK-Mod-Fabric"
+  },
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.jjkmod.JJKModMain"
+    ],
+    "client": [
+      "com.jjkmod.client.JJKModClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "minecraft": "${minecraft_version}",
+    "java": ">=21"
+  }
+}
